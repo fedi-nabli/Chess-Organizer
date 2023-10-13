@@ -8,7 +8,7 @@ Chess Organizer will have a Universal Desktop App (Wondows, macOS and Linux) ins
 
 ## Future Plan
 
-Chess Organizer will have a mobile app version (offile mode) and a web version after the first release
+Chess Organizer will have a mobile app version (offline mode) and a web version after the first release
 
 ## Contributors
 
