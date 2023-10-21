@@ -11,17 +11,17 @@ class SheetsModule():
     except HttpError as error:
       print(f'An error occured: {error}')
   
-  def list_values(self, spreadhseet_id: str = None) -> list:
+  def list_values(self, spreadsheet_id: str = None) -> list:
     try:
       rows = []
 
       spreadhseet = self.services.spreadsheets().get(
-        spreadsheetId=spreadhseet_id
+        spreadsheetId=spreadsheet_id
       ).execute()
       range = spreadhseet['sheets'][0]['properties']['title']
 
       result = self.services.spreadsheets().values().get(
-        spreadsheetId=spreadhseet_id, range=range
+        spreadsheetId=spreadsheet_id, range=range
       ).execute()
 
       rows.extend(result.get('values', []))
