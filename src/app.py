@@ -3,9 +3,12 @@ from modules.auth_module import AuthModule
 from modules.drive_module import DriveModule
 from modules.sheets_module import SheetsModule
 
+import database.api as db
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
+db.init_database()
 auth_session = AuthModule()
 drive_instance = DriveModule(auth_session.creds)
 sheets_instance = SheetsModule(auth_session.creds)
