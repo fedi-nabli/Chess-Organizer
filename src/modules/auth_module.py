@@ -15,7 +15,12 @@ class AuthModule():
       self.creds = Credentials.from_authorized_user_file('token.json', scopes=self.SCOPES)
     if not self.creds or not self.creds.valid:
       if self.creds and self.creds.expired and self.creds.refresh_token:
-        self.creds.refresh(Request())
+        try:
+          self.creds.refresh(Request())
+        except:
+          os.remove('token.json')
+          flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes=self.SCOPES)
+          self.creds = flow.run_local_server(port=0)
       else:
         flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes=self.SCOPES)
         self.creds = flow.run_local_server(port=0)
