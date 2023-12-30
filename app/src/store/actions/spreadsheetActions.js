@@ -6,7 +6,7 @@ import {
   SPREADSHEET_DETAILS_REQUEST,
   SPREADSHEET_DETAILS_SUCCESS,
   SPREADSHEET_DETAILS_FAIL
-} from '../constants/spreadhseetConstans'
+} from '../constants/spreadsheetConstants'
 
 const BASE_URL = 'http://127.0.0.1:15000'
 
