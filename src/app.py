@@ -5,6 +5,8 @@ from modules.sheets_module import SheetsModule
 
 import database.api as db
 
+from utils.list_to_json import convert_list_to_dicts
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
@@ -22,10 +24,15 @@ def list_spreadsheets():
   spreadhseets = drive_instance.list_files()
   return spreadhseets
 
+@app.route('/spreadsheets/<spreadsheet_id>/no-filter')
+def list_spreadsheet_values_unfiltered(spreadsheet_id=None):
+  rows = sheets_instance.list_values(spreadsheet_id)
+  return rows
+
 @app.route('/spreadsheets/<spreadsheet_id>')
 def list_spreadsheet_values(spreadsheet_id=None):
   rows = sheets_instance.list_values(spreadsheet_id)
-  return rows
+  return convert_list_to_dicts(rows)
 
 if __name__ == '__main__':
   app.run(debug=True, port=15000)
