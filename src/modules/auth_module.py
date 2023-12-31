@@ -8,7 +8,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 class AuthModule():
   def __init__(self) -> None:
-    self.SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.metadata.readonly']
+    self.SCOPES = ['openid', 'https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.metadata.readonly']
     self.creds = None
     
     if os.path.exists('token.json'):
