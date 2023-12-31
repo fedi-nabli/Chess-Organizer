@@ -1,0 +1,28 @@
+from mysql.connector import MySQLConnection, Error
+from mysql.connector.cursor import MySQLCursor
+
+def create_users_table(cursor: MySQLCursor = None):
+  try:
+    create_users_table_query = """
+                                CREATE TABLE IF NOT EXISTS USERS (
+                                  ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                                  Name VARCHAR(150) NOT NULL,
+                                  Email VARCHAR(250)
+                                )
+                              """
+    cursor.execute(create_users_table_query)
+
+  except Error as err:
+    print(f'An error occured: {err}')
+
+def insert_users_into_table(connection: MySQLConnection = None, cursor: MySQLCursor = None, user: dict = None) -> bool:
+  try:
+    insert_users_query = """INSERT INTO USERS (Name, Email) VALUES (%s, %s)"""
+    values = (user['name'], user['email'])
+    cursor.execute(insert_users_query, values)
+    connection.commit()
+    return True
+  
+  except Error as err:
+    print(f'An error occured while inserting: {err}')
+    return False
