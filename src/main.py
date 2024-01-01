@@ -17,6 +17,8 @@ def main():
   user_info = user_info_instance.get_user_info()
   database_instance.create_users_table()
   database_instance.insert_user(user_info)
+  print(database_instance.get_users())
+  print(database_instance.search_for_user(username='Fedi Nabli'))
   # print(files)
   # print(sheets_instance.list_values(files[1].get('id')))
   # print(convert_list_to_dicts(sheets_instance.list_values(files[2].get('id'))))

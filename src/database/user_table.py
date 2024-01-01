@@ -32,3 +32,21 @@ def insert_users_into_table(connection: MySQLConnection = None, cursor: MySQLCur
   except Error as err:
     print(f'An error occured while inserting: {err}')
     return False
+  
+def list_users(cursor: MySQLCursor = None) -> list[dict]:
+  users_list = []
+  try:
+    select_users_query = """SELECT * FROM USERS"""
+    cursor.execute(select_users_query)
+    users = cursor.fetchall()
+    for user_res in users:
+      user: dict = {}
+      user['ID'] = user_res[0]
+      user['Name'] = user_res[1]
+      user['Email'] = user_res[2]
+      users_list.append(user)
+      return users_list
+
+  except Error as err:
+    print(f'An error occured: {err}')
+    return users_list
