@@ -17,6 +17,12 @@ def create_users_table(cursor: MySQLCursor = None):
 
 def insert_users_into_table(connection: MySQLConnection = None, cursor: MySQLCursor = None, user: dict = None) -> bool:
   try:
+    select_users_query = """SELECT * FROM USERS"""
+    cursor.execute(select_users_query)
+    res = cursor.fetchall()
+    for user_res in res:
+      if user_res[2] == user['email']:
+        return True
     insert_users_query = """INSERT INTO USERS (Name, Email) VALUES (%s, %s)"""
     values = (user['name'], user['email'])
     cursor.execute(insert_users_query, values)
