@@ -50,3 +50,41 @@ def list_users(cursor: MySQLCursor = None) -> list[dict]:
   except Error as err:
     print(f'An error occured: {err}')
     return users_list
+  
+def find_user_by_name(cursor: MySQLCursor = None, name: str = None) -> list[dict]:
+  users_list = []
+  name = '%' + name + '%'
+  try:
+    select_users_query = """SELECT * FROM USERS WHERE Name LIKE %s"""
+    cursor.execute(select_users_query, (name,))
+    users = cursor.fetchall()
+    for user_res in users:
+      user: dict = {}
+      user['ID'] = user_res[0]
+      user['Name'] = user_res[1]
+      user['Email'] = user_res[2]
+      users_list.append(user)
+      return users_list
+
+  except Error as err:
+    print(f'An error occured: {err}')
+    return users_list
+  
+def find_user_by_email(cursor: MySQLCursor = None, email: str = None) -> list[dict]:
+  users_list = []
+  email = '%' + email + '%'
+  try:
+    select_users_query = """SELECT * FROM USERS WHERE Email LIKE %s"""
+    cursor.execute(select_users_query, (email,))
+    users = cursor.fetchall()
+    for user_res in users:
+      user: dict = {}
+      user['ID'] = user_res[0]
+      user['Name'] = user_res[1]
+      user['Email'] = user_res[2]
+      users_list.append(user)
+      return users_list
+
+  except Error as err:
+    print(f'An error occured: {err}')
+    return users_list

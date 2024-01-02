@@ -4,7 +4,7 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 import mysql.connector as connector
 
-from database.user_table import create_users_table, insert_users_into_table, list_users
+from database.user_table import create_users_table, insert_users_into_table, list_users,find_user_by_name, find_user_by_email
 
 dotnev_path = join(dirname(__file__), '../../.env')
 load_dotenv(dotnev_path)
@@ -58,17 +58,11 @@ class DataBaseApi():
   def get_users(self) -> list[dict]:
     return list_users(self.cursor)
   
-  def search_for_user(self, username: str = None, email: str = None) -> dict:
-    users = self.get_users()
-    for user in users:
-      if username is not None and email is not None:
-        if user['Name'] == user or user['Email'] == email:
-          return user
-      elif email is not None:
-        if user['Email'] == email:
-          return user
-      elif username is not None:
-        if user['Name'] == username:
-          return user
-      else:
-        return users
+  def search_for_user(self, username: str = None, email: str = None) -> list[dict]:
+    users = []
+    if email is not None:
+      return find_user_by_email(self.cursor, email)
+    elif username is not None:
+      return find_user_by_name(self.cursor, username)
+    else:
+      return users
