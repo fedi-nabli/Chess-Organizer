@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import mysql.connector as connector
 
 from database.user_table import create_users_table, insert_users_into_table, list_users,find_user_by_name, find_user_by_email, update_user, delete_user
+from database.spreadsheet_table import create_spreadsheets_table, list_spreadsheet_data
 
 dotnev_path = join(dirname(__file__), '../../.env')
 load_dotenv(dotnev_path)
@@ -39,6 +40,8 @@ class DataBaseApi():
         create_db_query = f"""CREATE DATABASE {db_name}"""
         self.cursor.execute(create_db_query)
         print(f'Created {db_name} db')
+        use_db_query = f"""USE {db_name}"""
+        self.cursor.execute(use_db_query)
       elif self.found:
         if delete_if_exists:
           drop_db_query = f"""DROP DATABASE {db_name}"""
@@ -55,9 +58,15 @@ class DataBaseApi():
   def create_users_table(self) -> bool:
     return create_users_table(self.cursor)
 
+  def create_spreadsheet_table(self, rows: list[list]):
+    return create_spreadsheets_table(self.connection, self.cursor, rows)
+
   def insert_user(self, user: dict) -> bool:
     return insert_users_into_table(self.connection, self.cursor, user)
   
+  def get_spreadsheet_data(self) -> list[dict]:
+    return list_spreadsheet_data(self.cursor)
+
   def get_users(self) -> list[dict]:
     return list_users(self.cursor)
   

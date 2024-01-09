@@ -11,7 +11,7 @@ from utils.list_to_json import convert_list_to_dicts, convert_list_to_json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
-database_instance = DataBaseApi("ChessOrganizer")
+database_instance = DataBaseApi("ChessOrganizer", delete_if_exists=True)
 auth_session = AuthModule()
 user_info_instance = UserInfoModule(auth_session.creds)
 drive_instance = DriveModule(auth_session.creds)
@@ -21,6 +21,9 @@ sheets_instance = SheetsModule(auth_session.creds)
 database_instance.create_users_table()
 user_info = user_info_instance.get_user_info()
 database_instance.insert_user(user_info)
+
+# Global variables
+global_spreadsheet_id: str = None
 
 @app.route('/')
 def index():
@@ -44,6 +47,9 @@ def list_spreadsheet_values_unfiltered(spreadsheet_id=None):
 @app.route('/spreadsheets/<spreadsheet_id>/list')
 def list_spreadsheet_values_list(spreadsheet_id=None):
   rows = sheets_instance.list_values(spreadsheet_id)
+  global global_spreadsheet_id
+  global_spreadsheet_id = spreadsheet_id
+  database_instance.create_spreadsheet_table(rows)
   return convert_list_to_dicts(rows)
 
 @app.route('/spreadsheets/<spreadsheet_id>')
@@ -59,6 +65,7 @@ def list_users():
 @app.route('/users/search/<name>')
 def search_user_by_name(name: str = None):
   users = database_instance.search_for_user(name)
+  return convert_list_to_json(users)
 
 @app.route('/users/<email>')
 def search_user_by_email(email: str = None):
@@ -76,6 +83,11 @@ def update_user_name(id: int = None):
 def delete_user_by_id(id: int = None):
   database_instance.delete_user_by_id(id)
   return jsonify(True)
+
+@app.route('/mysql/spreadsheet')
+def list_spreadsheet_values():
+  data = database_instance.get_spreadsheet_data()
+  return convert_list_to_json(data)
 
 if __name__ == '__main__':
   app.run(debug=True, port=15000)
