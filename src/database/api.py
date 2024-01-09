@@ -4,7 +4,7 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 import mysql.connector as connector
 
-from database.user_table import create_users_table, insert_users_into_table, list_users,find_user_by_name, find_user_by_email
+from database.user_table import create_users_table, insert_users_into_table, list_users,find_user_by_name, find_user_by_email, update_user, delete_user
 
 dotnev_path = join(dirname(__file__), '../../.env')
 load_dotenv(dotnev_path)
@@ -49,6 +49,9 @@ class DataBaseApi():
         use_db_query = f"""USE {db_name}"""
         self.cursor.execute(use_db_query)
 
+  def close(self):
+    self.connection.close()
+  
   def create_users_table(self) -> bool:
     return create_users_table(self.cursor)
 
@@ -66,3 +69,9 @@ class DataBaseApi():
       return find_user_by_name(self.cursor, username)
     else:
       return users
+    
+  def update_user_name(self, id: int = None, name: str = None) -> list[dict]:
+    return update_user(self.connection, self.cursor, id, name)
+
+  def delete_user_by_id(self, id: int = None):
+    delete_user(self.connection, self.cursor, id)

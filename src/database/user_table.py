@@ -45,7 +45,7 @@ def list_users(cursor: MySQLCursor = None) -> list[dict]:
       user['Name'] = user_res[1]
       user['Email'] = user_res[2]
       users_list.append(user)
-      return users_list
+    return users_list
 
   except Error as err:
     print(f'An error occured: {err}')
@@ -88,3 +88,36 @@ def find_user_by_email(cursor: MySQLCursor = None, email: str = None) -> list[di
   except Error as err:
     print(f'An error occured: {err}')
     return users_list
+  
+def delete_user(connection: MySQLConnection = None, cursor: MySQLCursor = None, id: int = None):
+  if id is None:
+    return
+  
+  try:
+    delete_user_query = """DELETE FROM USERS WHERE id=%s"""
+    values = (id, )
+    cursor.execute(delete_user_query, values)
+    connection.commit()
+    print('User deleted successfully')
+
+  except Error as err:
+    print(f'An error occured: {err}')
+
+def update_user(connection: MySQLConnection = None, cursor: MySQLCursor = None, id: int = None, name: str = None) -> list[dict]:
+  if name is None:
+    return
+  
+  try:
+    if id is not None:
+      update_user_query = """UPDATE USERS
+                              SET name = %s
+                              WHERE id=%s"""
+      values = (name, id)
+      cursor.execute(update_user_query, values)
+      connection.commit()
+      return list_users(cursor)
+    
+    print('Update needs an id')
+
+  except Error as err:
+    print(f'An error occuers: {err}')
