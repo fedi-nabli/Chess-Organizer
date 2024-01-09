@@ -64,7 +64,7 @@ def find_user_by_name(cursor: MySQLCursor = None, name: str = None) -> list[dict
       user['Name'] = user_res[1]
       user['Email'] = user_res[2]
       users_list.append(user)
-      return users_list
+    return users_list
 
   except Error as err:
     print(f'An error occured: {err}')
@@ -83,7 +83,7 @@ def find_user_by_email(cursor: MySQLCursor = None, email: str = None) -> list[di
       user['Name'] = user_res[1]
       user['Email'] = user_res[2]
       users_list.append(user)
-      return users_list
+    return users_list
 
   except Error as err:
     print(f'An error occured: {err}')

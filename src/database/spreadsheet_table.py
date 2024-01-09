@@ -21,10 +21,10 @@ def create_table_from_dict(connection: MySQLConnection = None, cursor: MySQLCurs
 def create_spreadsheets_table(connection: MySQLConnection = None, cursor: MySQLCursor = None, rows: list[list] = None) -> bool:
   try:
     column_types = {
-      'FIDE ID': 'INTEGER',
       'Name': 'TEXT',
       'NumTel': 'CHAR(8)',
       'DOB': 'DATE',
+      'FIDE ID': 'INTEGER PRIMARY KEY AUTO INCREMENT',
       'Club/Ville': 'VARCHAR(30)',
       'ELO': 'INT'
     }
