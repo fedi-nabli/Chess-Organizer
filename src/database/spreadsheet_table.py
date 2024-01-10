@@ -3,17 +3,19 @@ from mysql.connector.cursor import MySQLCursor
 
 from utils.list_to_tuple import convert_list_to_tuple
 
-def create_table_from_dict(connection: MySQLConnection = None, cursor: MySQLCursor = None, data_rows: list[tuple] = None, column_types: list = None, table_name: str = 'dynamic_table'):
+def create_table_from_dict(connection: MySQLConnection = None, cursor: MySQLCursor = None, data_rows: list[tuple] = None, column_types: dict = None, table_name: str = 'dynamic_table'):
     # Constructing CREATE TABLE query using dictionary keys and values
-    columns = ', '.join([f'{key} {value}' for key, value in data_rows.items()])
+    columns = ', '.join([f'{key} {value}' for key, value in column_types.items()])
     create_table_query = f'CREATE TABLE IF NOT EXISTS {table_name} ({columns})'
 
     # Execute CREATE TABLE query
     cursor.execute(create_table_query)
 
     # Inserting data from list into the table
-    insert_query = f'INSERT INTO {table_name} VALUES ({", ".join(["%s" for _ in range(len(data_rows))])})'
-    cursor.executemany(insert_query, column_types)
+    for row in data_rows:
+      insert_query = "INSERT INTO spreadsheets VALUES (%s, %s, %s, %s, %s, %s)"
+      values = (row[0], row[1], row[2], row[3], row[4], row[5])
+      cursor.execute(insert_query, values)
 
     # Commit changes and close connection
     connection.commit()
@@ -23,13 +25,13 @@ def create_spreadsheets_table(connection: MySQLConnection = None, cursor: MySQLC
     column_types = {
       'Name': 'TEXT',
       'NumTel': 'CHAR(8)',
-      'DOB': 'DATE',
-      'FIDE ID': 'INTEGER PRIMARY KEY AUTO INCREMENT',
-      'Club/Ville': 'VARCHAR(30)',
+      'DOB': 'VARCHAR(20)',
+      'FIDE_ID': 'INTEGER',
+      'Ville': 'TEXT',
       'ELO': 'INT'
     }
 
-    create_table_from_dict(connection, cursor, convert_list_to_tuple(rows), column_types, 'spreadsheets.')
+    create_table_from_dict(connection, cursor, convert_list_to_tuple(rows), column_types, 'spreadsheets')
     return True
 
   except Error as err:
@@ -44,10 +46,10 @@ def list_spreadsheet_data(cursor: MySQLCursor = None) -> list[dict]:
     spreadsheets = cursor.fetchall()
     for spreadsheet_row in spreadsheets:
       spreadsheet: dict = {}
-      spreadsheet['FIDE ID'] = spreadsheet_row[0]
-      spreadsheet['Name'] = spreadsheet_row[1]
-      spreadsheet['NumTel'] = spreadsheet_row[2]
-      spreadsheet['DOB'] = spreadsheet_row[3]
+      spreadsheet['Name'] = spreadsheet_row[0]
+      spreadsheet['NumTel'] = spreadsheet_row[1]
+      spreadsheet['DOB'] = spreadsheet_row[2]
+      spreadsheet['FIDE ID'] = spreadsheet_row[3]
       spreadsheet['Club/Ville'] = spreadsheet_row[4]
       spreadsheet['ELO'] = spreadsheet_row[5]
       spreadsheet_datat.append(spreadsheet)

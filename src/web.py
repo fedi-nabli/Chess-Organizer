@@ -42,13 +42,13 @@ def search_users():
   col1, col2 = st.columns(2)
   with col1:
     username = st.text_input("Enter user name to search:", "Enter user name to search:")
-    if username is not "":
+    if username != "":
       users = database_instance.search_for_user(username)
       st.write("Filtered Users")
       st.table(users)
   with col2:
     email = st.text_input("Enter user email to search:", "Enter user email to search:")
-    if email is not "":
+    if email != "":
       users = database_instance.search_for_user(email=email)
       st.write("Filtered Users")
       st.table(users)
@@ -72,11 +72,11 @@ def users():
         st.rerun()
 
 st.sidebar.markdown("Choose a file, see a sheet or see users")
-_radio = st.sidebar.radio("Navigation", ("Choose file", "Serch User", "See users"))
+_radio = st.sidebar.radio("Navigation", ("Choose file", "Search and Filter Users", "Update Users Data"))
 
 if _radio == "Choose file":
   home()
-elif _radio == "Serch User":
+elif _radio == "Search and Filter Users":
   search_users()
-elif _radio == "See users":
+elif _radio == "Update Users Data":
   users()
